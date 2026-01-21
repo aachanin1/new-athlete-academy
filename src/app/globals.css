@@ -7,46 +7,26 @@
   --primary-light: #66E5FF;
   --secondary: #3B82F6;
   --secondary-dark: #2563EB;
-  
+
   /* Background - Dark Theme */
   --background: #0A1628;
   --background-card: #0F2137;
   --background-elevated: #142A45;
-  
+
   /* Text Colors */
   --foreground: #F8FAFC;
   --foreground-muted: #94A3B8;
   --foreground-subtle: #64748B;
-  
+
   /* Status Colors */
   --success: #10B981;
   --warning: #F59E0B;
   --error: #EF4444;
   --info: #3B82F6;
-  
+
   /* Borders */
   --border: #1E3A5F;
   --border-light: #2D4A6F;
-}
-
-@theme inline {
-  --color-primary: var(--primary);
-  --color-primary-dark: var(--primary-dark);
-  --color-primary-light: var(--primary-light);
-  --color-secondary: var(--secondary);
-  --color-secondary-dark: var(--secondary-dark);
-  --color-background: var(--background);
-  --color-background-card: var(--background-card);
-  --color-background-elevated: var(--background-elevated);
-  --color-foreground: var(--foreground);
-  --color-foreground-muted: var(--foreground-muted);
-  --color-foreground-subtle: var(--foreground-subtle);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-error: var(--error);
-  --color-info: var(--info);
-  --color-border: var(--border);
-  --color-border-light: var(--border-light);
 }
 
 * {
@@ -95,26 +75,62 @@ body {
 
 /* Link styles */
 a {
-  color: var(--primary);
+  color: inherit;
   text-decoration: none;
-  transition: color 0.2s ease;
 }
 
-a:hover {
-  color: var(--primary-light);
+/* Button base */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: #0A1628;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Utility classes */
-.glass {
-  background: rgba(15, 33, 55, 0.8);
-  backdrop-filter: blur(12px);
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+}
+
+.btn-secondary {
+  background: var(--background-card);
+  color: var(--foreground);
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 12px;
   border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.glow {
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+.btn-secondary:hover {
+  background: var(--background-elevated);
+  border-color: var(--primary);
 }
 
+/* Card styles */
+.card {
+  background: var(--background-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 212, 255, 0.1);
+}
+
+/* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   -webkit-background-clip: text;
@@ -122,8 +138,203 @@ a:hover {
   background-clip: text;
 }
 
-.gradient-border {
-  border: 1px solid transparent;
-  background: linear-gradient(var(--background-card), var(--background-card)) padding-box,
-              linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) border-box;
+/* Glass effect */
+.glass {
+  background: rgba(15, 33, 55, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Section padding */
+.section {
+  padding: 80px 0;
+}
+
+/* Grid layouts */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding: 48px 0;
+  }
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+/* Popular tag */
+.popular-tag {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: #0A1628;
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Stat card */
+.stat-card {
+  text-align: center;
+  padding: 24px;
+  background: var(--background-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--foreground-muted);
+}
+
+/* Pricing card */
+.pricing-card {
+  background: var(--background-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+}
+
+.pricing-card.popular {
+  border: 2px solid var(--primary);
+  background: linear-gradient(180deg, rgba(0, 212, 255, 0.05) 0%, var(--background-card) 100%);
+}
+
+.price {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--foreground);
+  line-height: 1;
+}
+
+.price-currency {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Branch item */
+.branch-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--background-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.branch-item:hover {
+  border-color: var(--primary);
+  background: var(--background-elevated);
+}
+
+/* Level tier card */
+.level-card {
+  background: var(--background-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.level-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+}
+
+.level-emoji {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.level-range {
+  font-size: 12px;
+  color: var(--foreground-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.level-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 8px;
+}
+
+.level-desc {
+  font-size: 14px;
+  color: var(--foreground-muted);
 }
