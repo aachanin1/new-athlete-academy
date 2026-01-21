@@ -1,8 +1,61 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const router = useRouter();
+
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setLoading(true);
+        setError("");
+
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        const supabase = createClient();
+
+        const { data, error: authError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (authError) {
+            setError(authError.message === "Invalid login credentials"
+                ? "อีเมลหรือรหัสผ่านไม่ถูกต้อง"
+                : authError.message);
+            setLoading(false);
+            return;
+        }
+
+        // Get user role
+        const { data: userData } = await supabase
+            .from("users")
+            .select("role")
+            .eq("id", data.user.id)
+            .single();
+
+        const role = userData?.role || "parent";
+
+        // Redirect based on role
+        if (role === "super_admin" || role === "admin") {
+            router.push("/dashboard");
+        } else if (role === "head_coach" || role === "coach") {
+            router.push("/coach");
+        } else {
+            router.push("/parent");
+        }
+    }
+
     return (
         <div style={{
             minHeight: "100vh",
@@ -43,7 +96,22 @@ export default function LoginPage() {
                         ยินดีต้อนรับกลับ! กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ
                     </p>
 
-                    <form>
+                    {/* Error Message */}
+                    {error && (
+                        <div style={{
+                            padding: 12,
+                            marginBottom: 20,
+                            borderRadius: 10,
+                            background: "rgba(239, 68, 68, 0.1)",
+                            border: "1px solid var(--error)",
+                            color: "var(--error)",
+                            fontSize: 14
+                        }}>
+                            {error}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit}>
                         {/* Email Field */}
                         <div style={{ marginBottom: 20 }}>
                             <label style={{
@@ -67,8 +135,10 @@ export default function LoginPage() {
                                     }}
                                 />
                                 <input
+                                    name="email"
                                     type="email"
                                     placeholder="your@email.com"
+                                    required
                                     style={{
                                         width: "100%",
                                         padding: "14px 14px 14px 44px",
@@ -107,8 +177,10 @@ export default function LoginPage() {
                                     }}
                                 />
                                 <input
-                                    type="password"
+                                    name="password"
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="••••••••"
+                                    required
                                     style={{
                                         width: "100%",
                                         padding: "14px 44px 14px 44px",
@@ -123,6 +195,7 @@ export default function LoginPage() {
                                 />
                                 <button
                                     type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
                                     style={{
                                         position: "absolute",
                                         right: 14,
@@ -134,7 +207,7 @@ export default function LoginPage() {
                                         color: "var(--foreground-muted)"
                                     }}
                                 >
-                                    <Eye size={18} />
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
                         </div>
@@ -152,15 +225,25 @@ export default function LoginPage() {
                         {/* Submit Button */}
                         <button
                             type="submit"
+                            disabled={loading}
                             className="btn-primary"
                             style={{
                                 width: "100%",
                                 justifyContent: "center",
                                 padding: "16px",
-                                fontSize: 16
+                                fontSize: 16,
+                                opacity: loading ? 0.7 : 1,
+                                cursor: loading ? "not-allowed" : "pointer"
                             }}
                         >
-                            เข้าสู่ระบบ
+                            {loading ? (
+                                <>
+                                    <Loader2 size={20} className="animate-spin" style={{ animation: "spin 1s linear infinite" }} />
+                                    กำลังเข้าสู่ระบบ...
+                                </>
+                            ) : (
+                                "เข้าสู่ระบบ"
+                            )}
                         </button>
                     </form>
 
@@ -196,6 +279,13 @@ export default function LoginPage() {
                     </Link>
                 </div>
             </div>
+
+            <style jsx global>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
         </div>
     );
 }
