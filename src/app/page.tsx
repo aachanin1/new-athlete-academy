@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import {
   MapPin,
   Users,
@@ -9,6 +10,7 @@ import {
   Phone,
   Star
 } from "lucide-react";
+import LogoutAlert from "@/components/LogoutAlert";
 
 // Branch data
 const branches = [
@@ -66,6 +68,11 @@ const levelTiers = [
 export default function Home() {
   return (
     <div style={{ minHeight: "100vh" }}>
+      {/* Logout Alert */}
+      <Suspense fallback={null}>
+        <LogoutAlert />
+      </Suspense>
+
       {/* Navigation */}
       <nav className="glass" style={{
         position: "fixed",

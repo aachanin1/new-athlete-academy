@@ -7,30 +7,22 @@ import {
     CheckCircle,
     AlertCircle
 } from "lucide-react";
+import { getCoachDashboardData, getCoachTodayClasses, getCoachStudents } from "@/lib/data/dashboard";
 
-// Mock data
-const todayClasses = [
-    { time: "09:00 - 11:00", branch: "แจ้งวัฒนะ", students: 6, level: "1-15", status: "completed" },
-    { time: "13:00 - 15:00", branch: "แจ้งวัฒนะ", students: 5, level: "16-30", status: "ongoing" },
-    { time: "16:00 - 18:00", branch: "แจ้งวัฒนะ", students: 6, level: "1-15", status: "upcoming" },
-];
+export default async function CoachDashboard() {
+    // Fetch real data
+    const dashboardData = await getCoachDashboardData();
+    const todayClasses = await getCoachTodayClasses();
+    const myStudents = await getCoachStudents(4);
 
-const myStudents = [
-    { name: "น้องบิว", level: 15, sessions: 8, progress: "+2 levels" },
-    { name: "น้องมายด์", level: 32, sessions: 12, progress: "+3 levels" },
-    { name: "น้องปลื้ม", level: 22, sessions: 6, progress: "+1 level" },
-    { name: "น้องเจ", level: 8, sessions: 4, progress: "NEW" },
-];
+    const stats = [
+        { label: "ชั่วโมงสอนสัปดาห์นี้", value: dashboardData.teachingHoursThisWeek.toString(), icon: Clock, color: "var(--primary)" },
+        { label: "นักเรียนที่ดูแล", value: dashboardData.studentsManaged.toString(), icon: Users, color: "var(--secondary)" },
+        { label: "OT สัปดาห์นี้", value: `${dashboardData.overtimeHours} ชม.`, icon: TrendingUp, color: "var(--success)" },
+    ];
 
-const stats = [
-    { label: "ชั่วโมงสอนสัปดาห์นี้", value: "28", icon: Clock, color: "var(--primary)" },
-    { label: "นักเรียนที่ดูแล", value: "24", icon: Users, color: "var(--secondary)" },
-    { label: "OT สัปดาห์นี้", value: "3 ชม.", icon: TrendingUp, color: "var(--success)" },
-];
-
-export default function CoachDashboard() {
     return (
-        <DashboardLayout role="coach" userName="โค้ชบอล" userRole="โค้ช">
+        <DashboardLayout role="coach" userName="โค้ชบอล" userRole="หัวหน้าโค้ช">
             <div>
                 {/* Page Header */}
                 <div style={{ marginBottom: 32 }}>
@@ -84,7 +76,7 @@ export default function CoachDashboard() {
                         ตารางสอนวันนี้
                     </h2>
                     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                        {todayClasses.map((cls, i) => (
+                        {todayClasses.length > 0 ? todayClasses.map((cls, i) => (
                             <div key={i} style={{
                                 display: "flex",
                                 alignItems: "center",
@@ -134,7 +126,11 @@ export default function CoachDashboard() {
                                     )}
                                 </div>
                             </div>
-                        ))}
+                        )) : (
+                            <div style={{ textAlign: "center", padding: 20, color: "var(--foreground-muted)" }}>
+                                ไม่มีคลาสวันนี้
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -148,7 +144,7 @@ export default function CoachDashboard() {
                         gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
                         gap: 12
                     }}>
-                        {myStudents.map((student, i) => (
+                        {myStudents.length > 0 ? myStudents.map((student, i) => (
                             <div key={i} style={{
                                 padding: 16,
                                 background: "var(--background)",
@@ -171,7 +167,7 @@ export default function CoachDashboard() {
                                         color: "#0A1628",
                                         fontWeight: 600
                                     }}>
-                                        {student.name.charAt(0)}
+                                        {student.name?.charAt(0) || "?"}
                                     </div>
                                     <div>
                                         <div style={{ fontWeight: 500 }}>{student.name}</div>
@@ -196,7 +192,11 @@ export default function CoachDashboard() {
                                     </span>
                                 </div>
                             </div>
-                        ))}
+                        )) : (
+                            <div style={{ textAlign: "center", padding: 20, color: "var(--foreground-muted)", gridColumn: "1/-1" }}>
+                                ยังไม่มีนักเรียน
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

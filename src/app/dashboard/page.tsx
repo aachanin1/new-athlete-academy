@@ -3,67 +3,54 @@ import {
     Users,
     GraduationCap,
     MapPin,
-    TrendingUp,
-    Calendar,
     CreditCard,
+    Calendar,
     ArrowUpRight,
     ArrowDownRight
 } from "lucide-react";
+import { getAdminDashboardStats, getRecentStudents, getTodaySchedule } from "@/lib/data/dashboard";
 
-// Mock data for stats
-const stats = [
-    {
-        label: "นักเรียนทั้งหมด",
-        value: "127",
-        change: "+12%",
-        up: true,
-        icon: Users,
-        color: "var(--primary)"
-    },
-    {
-        label: "โค้ชทั้งหมด",
-        value: "18",
-        change: "+2",
-        up: true,
-        icon: GraduationCap,
-        color: "var(--secondary)"
-    },
-    {
-        label: "สาขา",
-        value: "7",
-        change: "0",
-        up: true,
-        icon: MapPin,
-        color: "var(--success)"
-    },
-    {
-        label: "รายได้เดือนนี้",
-        value: "฿428,500",
-        change: "+8.2%",
-        up: true,
-        icon: CreditCard,
-        color: "var(--warning)"
-    },
-];
+export default async function AdminDashboard() {
+    // Fetch real data from Supabase
+    const stats = await getAdminDashboardStats();
+    const recentStudents = await getRecentStudents(5);
+    const todaySchedule = await getTodaySchedule();
 
-// Mock data for recent students
-const recentStudents = [
-    { name: "น้องบิว", level: 15, branch: "แจ้งวัฒนะ", status: "active" },
-    { name: "น้องเปา", level: 8, branch: "พระราม 2", status: "trial" },
-    { name: "น้องมายด์", level: 32, branch: "รามอินทรา", status: "active" },
-    { name: "น้องปลื้ม", level: 22, branch: "สุวรรณภูมิ", status: "active" },
-    { name: "น้องฟิล์ม", level: 5, branch: "เทพารักษ์", status: "trial" },
-];
+    const statsData = [
+        {
+            label: "นักเรียนทั้งหมด",
+            value: stats.totalStudents.toString(),
+            change: "+12%",
+            up: true,
+            icon: Users,
+            color: "var(--primary)"
+        },
+        {
+            label: "โค้ชทั้งหมด",
+            value: stats.totalCoaches.toString(),
+            change: "+2",
+            up: true,
+            icon: GraduationCap,
+            color: "var(--secondary)"
+        },
+        {
+            label: "สาขา",
+            value: stats.totalBranches.toString(),
+            change: "0",
+            up: true,
+            icon: MapPin,
+            color: "var(--success)"
+        },
+        {
+            label: "รายได้เดือนนี้",
+            value: `฿${stats.monthlyRevenue.toLocaleString()}`,
+            change: "+8.2%",
+            up: true,
+            icon: CreditCard,
+            color: "var(--warning)"
+        },
+    ];
 
-// Mock data for today's schedule
-const todaySchedule = [
-    { time: "09:00 - 11:00", branch: "แจ้งวัฒนะ", students: 24, coaches: 4 },
-    { time: "13:00 - 15:00", branch: "รามอินทรา", students: 18, coaches: 3 },
-    { time: "16:00 - 18:00", branch: "พระราม 2", students: 20, coaches: 3 },
-    { time: "18:00 - 20:00", branch: "เทพารักษ์", students: 15, coaches: 2 },
-];
-
-export default function AdminDashboard() {
     return (
         <DashboardLayout role="admin" userName="ดราฟ" userRole="Super Admin">
             <div>
@@ -84,7 +71,7 @@ export default function AdminDashboard() {
                     gap: 20,
                     marginBottom: 32
                 }}>
-                    {stats.map((stat, i) => (
+                    {statsData.map((stat, i) => (
                         <div key={i} className="card" style={{ padding: 24 }}>
                             <div style={{
                                 display: "flex",
@@ -152,7 +139,7 @@ export default function AdminDashboard() {
                             </a>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                            {recentStudents.map((student, i) => (
+                            {recentStudents.length > 0 ? recentStudents.map((student, i) => (
                                 <div key={i} style={{
                                     display: "flex",
                                     alignItems: "center",
@@ -198,7 +185,11 @@ export default function AdminDashboard() {
                                         {student.status === "active" ? "เรียนอยู่" : "ทดลอง"}
                                     </span>
                                 </div>
-                            ))}
+                            )) : (
+                                <div style={{ textAlign: "center", padding: 20, color: "var(--foreground-muted)" }}>
+                                    ยังไม่มีนักเรียน
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -223,7 +214,7 @@ export default function AdminDashboard() {
                             </a>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                            {todaySchedule.map((item, i) => (
+                            {todaySchedule.length > 0 ? todaySchedule.map((item, i) => (
                                 <div key={i} style={{
                                     display: "flex",
                                     alignItems: "center",
@@ -252,13 +243,14 @@ export default function AdminDashboard() {
                                         </div>
                                     </div>
                                     <div style={{ textAlign: "right" }}>
-                                        <div style={{ fontSize: 14, fontWeight: 500 }}>{item.students} คน</div>
-                                        <div style={{ fontSize: 12, color: "var(--foreground-muted)" }}>
-                                            {item.coaches} โค้ช
-                                        </div>
+                                        <div style={{ fontSize: 14, fontWeight: 500 }}>{item.students}/{item.maxStudents} คน</div>
                                     </div>
                                 </div>
-                            ))}
+                            )) : (
+                                <div style={{ textAlign: "center", padding: 20, color: "var(--foreground-muted)" }}>
+                                    ไม่มีคลาสวันนี้
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

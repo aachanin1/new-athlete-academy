@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "@/lib/auth/actions";
 import {
     LayoutDashboard,
     Users,
@@ -205,24 +206,27 @@ export default function DashboardLayout({
 
                 {/* Logout */}
                 <div style={{ padding: 16, borderTop: "1px solid var(--border)" }}>
-                    <button
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                            padding: "12px 16px",
-                            borderRadius: 10,
-                            background: "transparent",
-                            border: "none",
-                            color: "var(--error)",
-                            cursor: "pointer",
-                            width: "100%",
-                            fontSize: 14
-                        }}
-                    >
-                        <LogOut size={20} />
-                        <span>ออกจากระบบ</span>
-                    </button>
+                    <form action={signOut}>
+                        <button
+                            type="submit"
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 12,
+                                padding: "12px 16px",
+                                borderRadius: 10,
+                                background: "transparent",
+                                border: "none",
+                                color: "var(--error)",
+                                cursor: "pointer",
+                                width: "100%",
+                                fontSize: 14
+                            }}
+                        >
+                            <LogOut size={20} />
+                            <span>ออกจากระบบ</span>
+                        </button>
+                    </form>
                 </div>
             </aside>
 
@@ -319,24 +323,27 @@ export default function DashboardLayout({
 
                 {/* Logout */}
                 <div style={{ padding: 16, borderTop: "1px solid var(--border)" }}>
-                    <button
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 12,
-                            padding: "12px 16px",
-                            borderRadius: 10,
-                            background: "transparent",
-                            border: "none",
-                            color: "var(--error)",
-                            cursor: "pointer",
-                            width: "100%",
-                            fontSize: 14
-                        }}
-                    >
-                        <LogOut size={20} />
-                        <span>ออกจากระบบ</span>
-                    </button>
+                    <form action={signOut}>
+                        <button
+                            type="submit"
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 12,
+                                padding: "12px 16px",
+                                borderRadius: 10,
+                                background: "transparent",
+                                border: "none",
+                                color: "var(--error)",
+                                cursor: "pointer",
+                                width: "100%",
+                                fontSize: 14
+                            }}
+                        >
+                            <LogOut size={20} />
+                            <span>ออกจากระบบ</span>
+                        </button>
+                    </form>
                 </div>
             </aside>
 
