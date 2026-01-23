@@ -7,7 +7,30 @@ This file contains the "brain" and context of the project up to this point. Use 
 1. **Copy** this `CONTEXT_HANDOVER.md` file along with your project code to the new machine.
 2. **Open** the project in your IDE/Agent.
 3. **Prompt** the AI with:
-   > "I am moving this project to a new machine. Please read `CONTEXT_HANDOVER.md` to understand the current status, plan, and recent changes. Re-initialize your memory with this context and continue the task."
+## 0. Setup on New Machine (ขั้นตอนการติดตั้งบนเครื่องใหม่)
+
+1. **Clone Repository (ดึงโค้ดลงมา):**
+   ```bash
+   git clone https://github.com/aachanin1/new-athlete-academy.git
+   cd new-athlete-academy
+   ```
+
+2. **Install Dependencies (ลงโปรแกรมที่จำเป็น):**
+   ```bash
+   npm install
+   ```
+
+3. **Setup Environment (ตั้งค่า):**
+   - สร้างไฟล์ `.env.local` ใน folder โปรเจกต์
+   - ใส่ค่า Key ต่างๆ (ดูที่หัวข้อ 6. Environment Variables)
+
+4. **Start Development (เริ่มรัน):**
+   ```bash
+   npm run dev
+   ```
+
+5. **Initialize AI Agent (ตั้งค่า AI):**
+   - ให้ AI อ่านไฟล์นี้ `CONTEXT_HANDOVER.md` เพื่อเข้าใจงานที่ทำค้างไว้
 
 ---
 
