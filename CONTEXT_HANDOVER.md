@@ -1,189 +1,183 @@
-# Project Context & Handover Summary
-**Date:** 2026-01-23 (Updated: 16:24)
+# CMS NASC - AI Context Handover
 
-This file contains the "brain" and context of the project up to this point. Use this to initialize the AI on a new machine.
-
-## How to use this file
-1. **Copy** this `CONTEXT_HANDOVER.md` file along with your project code to the new machine.
-2. **Open** the project in your IDE/Agent.
-3. **Prompt** the AI with:
-## 0. Setup on New Machine (ขั้นตอนการติดตั้งบนเครื่องใหม่)
-
-1. **Clone Repository (ดึงโค้ดลงมา):**
-   ```bash
-   git clone https://github.com/aachanin1/new-athlete-academy.git
-   cd new-athlete-academy
-   ```
-
-2. **Install Dependencies (ลงโปรแกรมที่จำเป็น):**
-   ```bash
-   npm install
-   ```
-
-3. **Setup Environment (ตั้งค่า):**
-   - สร้างไฟล์ `.env.local` ใน folder โปรเจกต์
-   - ใส่ค่า Key ต่างๆ (ดูที่หัวข้อ 6. Environment Variables)
-
-4. **Start Development (เริ่มรัน):**
-   ```bash
-   npm run dev
-   ```
-
-5. **Initialize AI Agent (ตั้งค่า AI):**
-   - ให้ AI อ่านไฟล์นี้ `CONTEXT_HANDOVER.md` เพื่อเข้าใจงานที่ทำค้างไว้
+> **Last Updated:** 2026-01-25 13:18  
+> **Version:** 2.1  
+> **Purpose:** ให้ AI เข้าใจ context ทั้งหมดเมื่อเริ่มทำงานที่เครื่องใหม่
 
 ---
 
-## 1. Project Overview
+## 🚀 วิธีใช้ไฟล์นี้ (สำหรับ AI ใหม่)
 
-**New Athlete Badminton Academy** - ระบบจัดการสโมสรแบดมินตัน
+**Copy ข้อความนี้ไปวางให้ AI ที่เครื่องใหม่:**
 
-### Tech Stack
-- **Framework**: Next.js 16.1.4 (App Router)
-- **Database**: Supabase (PostgreSQL + Auth)
-- **Styling**: Tailwind CSS 4
-- **Language**: TypeScript
-
-### Key Features
-- 🔐 Authentication (Login/Register/Logout with Supabase Auth)
-- 👨‍👧 Multi-role Dashboard (Admin, Coach, Parent)
-- 🧒 Course Type System (Kids/Adults/Family)
-- 📅 Session Booking System
-- 💰 Pricing Tiers per Course Type
-
----
-
-## 2. Current Task Status
-
-### ✅ Completed Today (2026-01-23)
-1. **System Testing** - Fixed build error in `FamilyEnrollClient.tsx` (missing `branches` prop)
-2. **Logout Function** - Connected logout buttons to `signOut` server action
-3. **Logout Alert** - Added success alert "ออกจากระบบเรียบร้อยแล้ว" on homepage
-
-### 🔄 In Progress
-- Course Type System Implementation (partially complete)
-
-### 📋 Pending Tasks
-- [ ] Complete booking flow (save to database)
-- [ ] Run migration `007_add_course_types.sql` in Supabase
-- [ ] Test full registration → booking flow
-
----
-
-## 3. Recent Changes
-
-### Files Modified Today
-
-#### `src/lib/auth/actions.ts`
-- `signOut()` now redirects to `/?logged_out=true` for showing alert
-
-#### `src/components/DashboardLayout.tsx`
-- Added `import { signOut } from "@/lib/auth/actions"`
-- Wrapped logout buttons in `<form action={signOut}>` (both mobile & desktop sidebar)
-
-#### `src/components/LogoutAlert.tsx` (NEW)
-- Client component showing success alert when `logged_out=true` in URL
-- Auto-dismisses after 4 seconds
-- Animated slide-down effect
-
-#### `src/app/page.tsx`
-- Added `<LogoutAlert />` wrapped in `<Suspense>`
-
-#### `src/app/parent/enroll/family/FamilyEnrollClient.tsx`
-- Fixed: Added missing `branches` prop to `<AddChildForm />`
-
----
-
-## 4. Key File Locations
-
-### Authentication
-- `src/lib/auth/actions.ts` - Server actions (signUp, signIn, signOut)
-- `src/lib/supabase/server.ts` - Supabase server client
-- `src/lib/supabase/client.ts` - Supabase browser client
-
-### Layouts
-- `src/components/DashboardLayout.tsx` - Shared layout for Admin/Coach/Parent
-
-### Registration Flow
-- `src/app/parent/enroll/page.tsx` - Course type selection
-- `src/app/parent/enroll/adult/` - Adult self-enrollment
-- `src/app/parent/enroll/family/` - Family enrollment
-- `src/app/parent/children/add/` - Add child form
-
-### API Routes
-- `src/app/api/parent/sessions/route.ts` - Get sessions by courseType
-- `src/app/api/parent/book/route.ts` - Book a session
-- `src/app/api/parent/enroll-adult/route.ts` - Adult enrollment
-
----
-
-## 5. Database Schema
-
-### Key Tables
-- `users` - User profiles with role (admin, coach, parent)
-- `parents` - Parent records linked to users
-- `students` - Children or adult students
-- `sessions` - Class sessions with course_type
-- `enrollments` - Student enrollments
-- `attendance` - Booking records
-- `branches` - Academy branches
-- `pricing_tiers` - Pricing per course type
-
-### Pending Migration
-> ⚠️ Run `supabase/migrations/007_add_course_types.sql` in Supabase SQL Editor
-
----
-
-## 6. Environment Variables
-
-Required in `.env.local`:
 ```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+ผมกำลังพัฒนา CMS NASC ระบบจัดการสโมสรแบดมินตัน กรุณา:
+1. อ่านไฟล์ CONTEXT_HANDOVER.md ในโปรเจค
+2. อ่านไฟล์ task.md ใน .gemini/antigravity/brain/ folder
+3. ดำเนินการต่อจาก Phase ที่ค้างอยู่
 ```
 
 ---
 
-## 7. Commands
+## 🎯 Project Overview
+
+**ระบบ CMS สำหรับ New Athlete Badminton Academy**
+
+| รายการ | รายละเอียด |
+|--------|-----------|
+| Tech Stack | Next.js 16 + Supabase + TypeScript + Tailwind 4 |
+| สาขา | 7 แห่ง (แจ้งวัฒนะ, พระราม 2, รามอินทรา, สุวรรณภูมิ, เทพารักษ์, รัชดา, ราชพฤกษ์) |
+| คอร์ส | Kids Group, Adult Group, Private |
+| User Types | Parent, Coach, Head Coach, Super User/Admin |
+
+---
+
+## 📋 Current Status (อัปเดตล่าสุด)
+
+| Phase | Status | Description |
+|-------|--------|-------------|
+| **1** | ✅ Done | Database Schema (23 tables) |
+| **1.3** | ⏳ Pending | Run migrations ใน Supabase |
+| **1.5** | ⏳ Pending | ปรับ UI เดิมให้รองรับ Schema ใหม่ |
+| 2 | 🔲 | User System (Booking Flow) |
+| 3 | 🔲 | Coach System |
+| 4 | 🔲 | Admin System |
+| 5 | 🔲 | Core Features |
+| 6 | 🔲 | Notifications & UX |
+| 7 | 🔲 | Testing |
+
+---
+
+## 📊 Business Rules (สำคัญ!)
+
+### Pricing - เด็ก (รายเดือน)
+| ครั้ง | ราคา | เฉลี่ย |
+|------|------|-------|
+| 1 | ฿700 | ฿700 |
+| 2-6 | ฿2,500 | ฿625 |
+| 7-10 | ฿4,000 | ฿500 |
+| 11-14 | ฿5,200 | ฿433 |
+| 15-18 | ฿6,500 | ฿406 |
+| 19+ | ฿7,000 | ฿350 |
+
+### Pricing - ผู้ใหญ่ (ใช้ได้ 10 เดือน!)
+- 1 ครั้ง: ฿600
+- 10 ครั้ง: ฿5,500 (ใช้ได้ 10 เดือน)
+- 16 ครั้ง: ฿8,000 (ใช้ได้ 10 เดือน)
+
+### Pricing - Private
+- ชั่วโมงละ: ฿900
+- Package 10 ชม.: ฿8,000
+
+### Sibling Pricing (เรทพี่น้อง)
+- รวมจำนวนครั้งของลูกทุกคนเพื่อได้ tier ที่ดีกว่า
+
+### Coach OT (เกิน 25 ชม./สัปดาห์)
+- กลุ่ม: ฿200/ชม.
+- Private: ฿400/ชม.
+
+---
+
+## 📁 Key Files (ไฟล์สำคัญ)
+
+### Database & Types
+| File | Purpose |
+|------|---------|
+| `supabase/migrations/011_complete_schema_redesign.sql` | Schema 23 tables |
+| `supabase/migrations/012_schedule_templates.sql` | รอบเรียน 7 สาขา |
+| `src/types/database.ts` | TypeScript types |
+| `src/lib/pricingUtils.ts` | Pricing + Sibling logic |
+
+### App Structure
+| Path | Purpose |
+|------|---------|
+| `src/app/parent/` | Parent dashboard + enroll |
+| `src/app/coach/` | Coach dashboard |
+| `src/app/dashboard/` | Admin dashboard |
+| `src/lib/data/dashboard.ts` | Data fetching functions |
+| `src/lib/auth/actions.ts` | Auth actions |
+
+### Requirements
+| File | Purpose |
+|------|---------|
+| `CMS NASC..md` | Original requirements (Thai) |
+| `CONTEXT_HANDOVER.md` | นี่คือไฟล์นี้! |
+
+---
+
+## 🔧 Database Schema (23 Tables)
+
+**Core:**
+`users`, `parents`, `students`, `coaches`, `branches`
+
+**Booking & Schedule:**
+`schedule_templates`, `sessions`, `enrollments`, `bookings`, `monthly_usage`
+
+**Payment:**
+`pricing_tiers`, `payments`, `coupons`, `coupon_usage`
+
+**Tracking:**
+`learning_history`, `level_history`, `attendance`
+
+**Admin:**
+`activity_logs`, `notifications`, `coach_payroll`, `teaching_programs`
+
+**Relations:**
+`branch_coaches`, `courts`, `course_types`
+
+---
+
+## ⚙️ Setup Commands
 
 ```bash
-# Install dependencies
+# 1. Install
 npm install
 
-# Run development server
+# 2. Environment (.env.local)
+NEXT_PUBLIC_SUPABASE_URL=xxx
+NEXT_PUBLIC_SUPABASE_ANON_KEY=xxx
+
+# 3. Run migrations in Supabase SQL Editor:
+#    - 011_complete_schema_redesign.sql
+#    - 012_schedule_templates.sql
+
+# 4. Run dev
 npm run dev
-
-# Build for production
-npm run build
-
-# Lint
-npm run lint
 ```
 
 ---
 
-## 8. Next Steps (Priority Order)
+## 📌 Special Notes
 
-1. **Run Migration** - Execute `007_add_course_types.sql` in Supabase
-2. **Complete Booking Flow** - Connect session booking to database
-3. **Test Full Flow** - Register → Add child → Book session → Payment
-
----
-
-## 9. Known Issues
-
-| Issue | Status | Notes |
-|-------|--------|-------|
-| Adult pricing placeholder | ⚠️ | Using ฿800 single, ฿3000 Course 4 (need real prices) |
-| Family mode summary | ❌ | Not fully implemented |
-| Payment integration | ❌ | Not started |
+1. **ผู้ใหญ่ต่างจากเด็ก**: 10-16 ครั้งใช้ได้ 10 เดือน (ไม่ใช่รายเดือน)
+2. **Learning History**: โค้ชดูว่าสอนใคร, นักเรียนดูว่าเรียนกับใคร
+3. **Activity Logs**: Super User only, เก็บ 1 ปี
+4. **Head Coach**: จำกัดสาขาเดียว
 
 ---
 
-## 10. Test Accounts
+## ✅ What's Done
 
-For testing, you can create accounts via `/register` or use existing:
-- Login at `/login`
-- Admin dashboard: `/dashboard`
-- Coach dashboard: `/coach`
-- Parent dashboard: `/parent`
+1. Database schema 23 tables ✅
+2. Schedule templates 7 branches ✅
+3. TypeScript types ✅
+4. Pricing utilities (sibling pricing) ✅
+5. Task checklist created ✅
+
+---
+
+## ⏳ Next Steps (ตามลำดับ)
+
+1. **Run migrations** ใน Supabase SQL Editor
+2. **Phase 1.5**: ปรับ UI เดิมให้ใช้ schema ใหม่
+   - dashboard.ts ใช้ column ใหม่
+   - EnrollClient เพิ่ม 3 ประเภทคอร์ส
+   - API routes ใช้ tables ใหม่
+3. **Phase 2+**: ทำ feature ใหม่ต่อ
+
+---
+
+> **AI Note**: หากต้องการ context เพิ่มเติม อ่าน:
+> - `task.md` ใน .gemini folder
+> - `implementation_plan.md` ใน .gemini folder
+> - `CMS NASC..md` สำหรับ full requirements

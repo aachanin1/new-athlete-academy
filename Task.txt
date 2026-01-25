@@ -1,0 +1,158 @@
+CMS NASC System Development Tasks
+Project Overview
+ระบบจัดการสโมสรแบดมินตัน New Athlete Academy - ครอบคลุม 7 สาขา, 4 ประเภทผู้ใช้งาน
+
+Phase 1: Database Schema Enhancement
+ 1.1 ออกแบบ Database Schema ใหม่ให้รองรับ Requirements ทั้งหมด
+ เพิ่มตาราง course_types (kids_group, adult_group, private)
+ เพิ่มตาราง coupons สำหรับคูปองส่วนลด
+ เพิ่มตาราง notifications สำหรับการแจ้งเตือน
+ เพิ่มตาราง schedule_templates สำหรับรอบเรียนประจำสาขา
+ ปรับปรุงตาราง pricing_tiers ให้รองรับ Private pricing
+ เพิ่มตาราง bookings แยกจาก enrollments (การจองรายครั้ง)
+ เพิ่ม sibling_pricing logic (เรทพี่น้อง)
+ เพิ่ม monthly_usage tracking (ติดตามการใช้งานรายเดือน)
+ เพิ่มตาราง learning_history (ประวัติการเรียน)
+ เพิ่มตาราง activity_logs (Super User ดู log ระบบ)
+ 1.2 สร้าง Migration files
+ 1.3 Run migrations ใน Supabase
+Phase 1.5: UI Compatibility Adaptation (ปรับ UI เดิมให้รองรับ Schema ใหม่)
+ 1.5.1 ปรับ Data Functions (
+src/lib/data/dashboard.ts
+)
+ เปลี่ยน sessions_per_month → sessions_purchased
+ เปลี่ยน price_per_month → total_price
+ เพิ่ม query สำหรับ bookings table
+ เพิ่ม query สำหรับ learning_history
+ ปรับ 
+getParentChildren()
+ ให้ใช้ schema ใหม่
+ ปรับ 
+getAllStudentsWithParents()
+ ให้ใช้ schema ใหม่
+ 1.5.2 ปรับ Enroll Flow (src/app/parent/enroll/)
+ EnrollClient.tsx - เพิ่มเลือก: เด็ก/ผู้ใหญ่/Private
+ EnrollClient.tsx - เพิ่มเลือก: กลุ่ม/Private mode
+ สร้าง CourseTypeSelector ใหม่รองรับ 3 ประเภท
+ AdultSelfEnrollForm.tsx - ใช้ course_type_code: 'adult_group'
+ สร้าง PrivateEnrollForm.tsx สำหรับ Private booking
+ 1.5.3 ปรับ API Routes
+ /api/parent/enroll-adult/route.ts - ใช้ table ใหม่
+ /api/parent/book/route.ts - ใช้ bookings table
+ /api/parent/sessions/route.ts - query จาก schedule_templates
+ สร้าง /api/booking/ routes ใหม่
+ 1.5.4 ปรับ Type Imports
+ ลบ types เก่าใน components
+ import จาก @/types/database ใหม่
+ ปรับ interface ให้ตรงกับ schema ใหม่
+ 1.5.5 ปรับ Components
+ CourseTypeSelector.tsx - รองรับ kids_group/adult_group/private
+ สร้าง SessionPicker.tsx - เลือกวันเวลาจาก templates
+ AddChildForm.tsx - ปรับให้ใช้ schema ใหม่
+Phase 2: User System Enhancement
+2.1 Authentication System (มีอยู่แล้วบางส่วน)
+ Login/Register with Supabase Auth
+ Role-based access (super_admin, admin, head_coach, coach, parent)
+ ปรับปรุง Head Coach role ให้สาขาเดียว
+ 2.2 Parent/User Features
+ สมัครสมาชิก
+ เพิ่มข้อมูลลูก
+ เลือกประเภทการเรียน (เด็ก/ผู้ใหญ่/ทั้งสอง)
+ เลือกแบบกลุ่ม/Private
+ เลือกสาขาและรอบเรียน
+ ระบบคำนวณเงินอัตโนมัติ (รวม sibling pricing)
+ เปลี่ยนวัน/รอบเรียนด้วยตนเอง (ภายในเดือน, ล่วงหน้า 24 ชม.)
+ เปลี่ยนสาขาได้
+ ดู Level และ Rank ของตนเอง
+ ใช้คูปองส่วนลด
+ แนบสลิปชำระเงิน
+ รับ Notifications
+ ดูประวัติการเรียน: เรียนกับโค้ชคนไหนบ้าง วันไหน
+Phase 3: Coach System
+ 3.1 Coach Dashboard
+ ดูรอบสอนของตนเอง
+ เช็คชื่อนักเรียน
+ กรอกโปรแกรมสอน (ส่งให้ Super User ตรวจ)
+ กรอก Level/พัฒนาการนักเรียน
+ ดูรายชื่อนักเรียนทั้งหมด + Level
+ ดูชั่วโมงการสอน (กลุ่ม/Private แยกกัน)
+ ดูชั่วโมงเรียนของนักเรียน
+ 3.2 Head Coach Features
+ แบ่งกลุ่มเด็กในแต่ละรอบให้โค้ชผู้สอน
+ จำกัดหัวหน้าโค้ชสาขาเดียว
+ 3.3 Learning History (ใหม่!)
+ ดูประวัติการสอน: สอนใครไปบ้าง วันไหน
+Phase 4: Super User / Admin System
+ 4.1 User Management
+ สร้าง Username/Password ให้โค้ช
+ กำหนดหัวหน้าโค้ชและสาขา
+ 4.2 Booking Management (ทำแทน User)
+ เลือกวันเรียนให้นักเรียน
+ เลือกวันชดเชย (ไม่คิดเงิน)
+ 4.3 Coach Features (ทำได้เหมือนโค้ช)
+ แบ่งกลุ่มเด็ก
+ เช็คชื่อเด็ก
+ 4.4 Payroll Calculation
+ คำนวณชั่วโมงสอนโค้ช (สัปดาห์ > 25 ชม.)
+ OT กลุ่ม 200 บาท/ชม., Private 400 บาท/ชม.
+ ดูชั่วโมงสอน: วันนี้/สัปดาห์/เดือน/ทั้งหมด
+ 4.5 Finance
+ ตรวจสอบสลิปชำระเงิน
+ สรุปรายรับ (คอร์สเรียน) รายเดือน/ปี
+ สรุปรายจ่าย (เงินโค้ช) รายเดือน/ปี
+ 4.6 Settings
+ สร้างคูปองส่วนลด
+ กำหนดเวลาเรียนแต่ละสาขา
+ 4.7 Activity Logs (Super User เท่านั้น!)
+ ดู log ทั้งหมด (ใครทำอะไรผ่านระบบ)
+ กรอง filter ตาม user/action/date
+ Export log
+Phase 5: Core Features Implementation
+ 5.1 Pricing Engine
+ เด็ก: 700/2,500/4,000/5,200/6,500/7,000 บาท
+ ผู้ใหญ่: 600/5,500/8,000 บาท
+ Private: 900/8,000 บาท (10 ชม.)
+ Sibling pricing (รวมจำนวนครั้งพี่น้อง)
+ Additional sessions calculation
+ 5.2 Schedule System
+ รอบเรียนแต่ละสาขา (จาก Requirements)
+ แสดงรอบเรียนตาม course type
+ จองข้ามเดือน (นับแยกเดือน)
+ 5.3 Level & Rank System
+ Level 1-60
+ Rank ในสาขา
+ Rank รวมทั้งหมด (แยกเด็ก/ผู้ใหญ่)
+ 5.4 Status Indicators
+ 4 ครั้ง: ขั้นต่ำ
+ 8 ครั้ง: ออกกำลังกาย
+ 12 ครั้ง: เริ่มต้นนักกีฬา
+ 16 ครั้ง: นักกีฬา
+ 19 ครั้ง: นักกีฬา
+ 24 ครั้ง: ระดับประเทศ
+ < 4 ครั้ง: แจ้งเตือน
+Phase 6: Notifications & UX
+ 6.1 Notification System
+ การแจ้งเตือนผ่านระบบ
+ แจ้งเตือนเมื่อควรหาวันเรียนเพิ่ม
+ 6.2 Responsive Design
+ รองรับทุกอุปกรณ์
+ 6.3 UX Improvements
+ ใช้งานง่าย
+ แถบแสดงสถานะ + Emoji
+Phase 7: Testing & Deployment
+ 7.1 Unit Tests
+ 7.2 Integration Tests
+ 7.3 User Acceptance Testing
+ 7.4 Production Deployment
+Current Progress
+Start Date: 2026-01-25
+Status: Phase 1 Done → Phase 1.5 Next
+Last Updated: 2026-01-25 13:15
+✅ Completed Files:
+supabase/migrations/011_complete_schema_redesign.sql - 23 tables
+supabase/migrations/012_schedule_templates.sql - รอบเรียน 7 สาขา
+src/types/database.ts - TypeScript types
+src/lib/pricingUtils.ts - Pricing + Sibling logic
+⏳ Next Step:
+Phase 1.3: Run migrations ใน Supabase
+Phase 1.5: ปรับ UI เดิมให้รองรับ Schema ใหม่
